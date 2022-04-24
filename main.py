@@ -1,44 +1,18 @@
-from typing import List, Tuple, Dict, Set
-from enum import Enum
+from hardware.sensor import *
 from random import randint
-
-class SensorType(Enum):
-    NONE = 0
-    TEMPERATURE = 1
-    LEVEL = 2
-    ROTATION_SPEED = 3
+from hardware.controller import *
 
 
-class PLC:
-    def __init__(self):
-        self.inputs = {}
-        self.outputs = {}
-        self.tick = 0
-    
-    def add_sensor(self, port,sensor):
-        self.inputs[port] = sensor
-
-    def add_executor(self, port, executor):
-        self.outputs[port] = executor
-
-    def get(self, port):
-        return self.inputs[port].evaluate(self.tick)
-
-class Sensor():
-    def __init__(self, sensor_type, con_type, output_func):
-        self.type: SensorType = sensor_type
-        self.connection_type = con_type
-        self.evaluate = output_func
-
-class Executor():
-    def __init__(self):
-        pass
-
+def tick(self):
+    print(self.get("A1")/self.get("A2"))
 
 
 plc = PLC()
 
-temperature_sensor  = Sensor(SensorType.TEMPERATURE, "ANALOG", lambda t: randint(1,255))
-
+temperature_sensor = Sensor(SensorType.TEMPERATURE, "ANALOG", lambda t: t/1000)
+humidity_sensor = Sensor(SensorType.ROTATION_SPEED, "ANALOG", lambda t: t/1000+15)
 plc.add_sensor("A1", temperature_sensor)
+plc.add_sensor("A2", humidity_sensor)
 
+plc.set_tick_func(tick)
+plc.start()
