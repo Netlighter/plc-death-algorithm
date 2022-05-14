@@ -2,10 +2,10 @@
 from server import *
 
 
-server = start_server(7777,1)
+server = start_server(7777,2)
 wait_connection(server)
 
-
+print("Ds")
 
 # plc = PLC()
 # def tick(self):
