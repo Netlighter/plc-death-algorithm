@@ -13,6 +13,6 @@ class Accident_type(Base):
 
     accident_type = Column(String, nullable=False)
 
-    tool_id = Column(Integer, ForeignKey("Tool.tool_id"))
+    tool_id = Column(Integer, ForeignKey(Tool.tool_id))
 
 Tool.accident_types = relationship("Accident_type", uselist=True)

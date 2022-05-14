@@ -15,6 +15,6 @@ class Sensor(Base):
 
     sensor_type = Column(String, nullable=False)
 
-    tool_id = Column(Integer, ForeignKey("Tool.tool_id"))
+    tool_id = Column(Integer, ForeignKey(Tool.tool_id))
 
 Tool.sensors = relationship("Sensor", uselist=True)
