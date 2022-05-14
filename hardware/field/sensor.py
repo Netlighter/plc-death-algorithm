@@ -9,7 +9,8 @@ class SensorType(Enum):
 
 
 class Sensor():
-    def __init__(self, sensor_type, con_type, output_func):
+    def __init__(self, sensor_type, name, con_type, output_func):
+        self.name = name
         self.type: SensorType = sensor_type
         self.connection_type = con_type
         self.evaluate = output_func

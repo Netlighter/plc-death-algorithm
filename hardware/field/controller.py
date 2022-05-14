@@ -1,3 +1,6 @@
+from hardware.field.sensor import Sensor
+
+
 class PLC:
     def __init__(self):
         self.tick = 0
@@ -11,6 +14,11 @@ class PLC:
 
     def add_executor(self, port, executor):
         self.outputs[port] = executor
+
+    def get_sensor_info(self, port) -> Sensor:
+        if not self.inputs.get(port):
+            raise Exception(f'[CONTROLLER ERROR] Port {port} is not assigned.')
+        return self.inputs[port]
         
     def get(self, port):
         if not self.inputs.get(port):
