@@ -1,14 +1,16 @@
-import { PageHeader } from 'antd';
-import './style.css'
+import { PageHeader, Button } from 'antd';
+import './style.css';
 
-function Header() {
+function HeaderStyled() {
   return (
-    <PageHeader
-      className="site-page-header"
-      title="PromInet"
-      subTitle="This is a subtitle"
-    />
+    <>
+      <PageHeader
+        className="Header"
+        title="PromInet"
+        subTitle="This is a subtitle"
+      />
+    </>
   );
 }
-export default Header;
+export default HeaderStyled;
 

@@ -1,28 +1,74 @@
-import logo from './logo.svg';
 import './App.css';
-import { Button } from 'antd';
-import Header from './components/Header/Header'
+import HeaderStyled from './components/Header/Header';
+import { Row, Col } from 'antd';
+import { Card } from 'antd';
+import { Layout } from 'antd';
+
+const { Footer, Content } = Layout;
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Header></Header>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Button type="primary">FUCK!</Button>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Layout style={{ overflow: 'hidden'}}>
+          <HeaderStyled />
+        <Content style={{ padding: '50px 50px', minHeight: '80vh'}}>
+          <Row gutter={[24, 24]}>
+            <Col span={12}>
+              <div className="site-card-border-less-wrapper">
+                <Card
+                  title="Card title"
+                  bordered={false}
+                >
+                  <p>Card content</p>
+                  <p>Card content</p>
+                  <p>Card content</p>
+                </Card>
+              </div>
+            </Col>
+            <Col span={12}>
+              <div className="site-card-border-less-wrapper">
+                <Card
+                  title="Card title"
+                  bordered={false}
+                >
+                  <p>Card content</p>
+                  <p>Card content</p>
+                  <p>Card content</p>
+                </Card>
+              </div>
+            </Col>
+            <Col span={12}>
+              <div className="site-card-border-less-wrapper">
+                <Card
+                  title="Card title"
+                  bordered={false}
+                >
+                  <p>Card content</p>
+                  <p>Card content</p>
+                  <p>Card content</p>
+                </Card>
+              </div>
+            </Col>
+            <Col span={12}>
+              <div className="site-card-border-less-wrapper">
+                <Card
+                  title="Card title"
+                  bordered={false}
+                >
+                  <p>Card content</p>
+                  <p>Card content</p>
+                  <p>Card content</p>
+                </Card>
+              </div>
+            </Col>
+          </Row>
+        </Content>
+        <Footer>Prominet</Footer>
+      </Layout>
     </div>
   );
 }
 
 export default App;
+
