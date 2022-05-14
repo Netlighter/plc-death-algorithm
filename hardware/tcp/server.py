@@ -26,5 +26,5 @@ def wait_connection(sock):
     while True: 
         conn, addr = sock.accept()
         print(f"Accepted connection from {addr}")
-        CONNECTIONS.append 
+        CONNECTIONS.append(conn)
         Thread(target = connection_thread, args=(conn,)).start()

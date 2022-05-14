@@ -29,5 +29,3 @@ def start_client():
 
     write_thread = threading.Thread(target=write, args=(client,))
     write_thread.start()
-
-start_client()
