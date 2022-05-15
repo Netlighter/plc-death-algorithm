@@ -1,7 +1,7 @@
 from .. import Base
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from .sequences import tool_table_sequence
-from web import to_json
+from web.serializer import to_json
 
 
 class Tool(Base):
@@ -16,6 +16,5 @@ class Tool(Base):
 
     tool_accident = Column(Boolean, nullable=False)
 
-    @property
     def json(self):
-        return to_json(self, self.__class__)
+        return to_json(self, Tool)

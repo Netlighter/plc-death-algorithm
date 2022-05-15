@@ -1,27 +1,30 @@
 import json
 from datetime import datetime
+from sqlalchemy.sql.sqltypes import DateTime
 
 
-def to_json(inst, cls):
-    
+def obj_to_dict(inst, cls):
     convert = dict()
     d = dict()
     for c in cls.__table__.columns:
         v = getattr(inst, c.name)
-        if c.type in convert.keys() and v is not None:
-            try:
-                d[c.name] = convert[c.type](v)
-                
-            except:
-                d[c.name] = "Error:  Failed to covert using ", str(convert[c.type])
-        if c.type  in convert.keys() and c.type is datetime:
-            print('yes')
-            d[c.name] = convert[str](v)
-        elif v is None:
+        for type in convert:         
+            if isinstance(c.type, type) and v is not None:
+                try: 
+                    d[c.name] = convert[type](v)  
+                except:
+                    d[c.name] = "Error:  Failed to covert using ", str(convert[type])
+        if v is None:
             d[c.name] = str()
         else:
             d[c.name] = v
-    if type(d) is not datetime:
-        return json.dumps(d, ensure_ascii=False)
+    return d
+
+def to_json(inst, cls):
+    if isinstance(inst, list):
+        result = []
+        for obj in inst:
+            result.append(obj_to_dict(obj, cls))
     else:
-        return json.dumps(str(d), ensure_ascii=False)
+        result = obj_to_dict(inst, cls)
+    return json.dumps(result, ensure_ascii=False,default=str)

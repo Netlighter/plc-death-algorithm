@@ -1,7 +1,11 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, scoped_session
+from dotenv import load_dotenv
+import os
 
-db_url = "postgresql+psycopg2://postgres:sports@localhost:5432/prom"
+load_dotenv()
+
+db_url = os.getenv("DB_URL")
 
 engine = create_engine(db_url)
 

@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 from .sequences import sensor_table_sequence
 from .tool import Tool
-from web import to_json
+from web.serializer import to_json
 
 
 class Sensor(Base):
@@ -18,8 +18,7 @@ class Sensor(Base):
 
     tool_id = Column(Integer, ForeignKey(Tool.tool_id))
 
-    @property
     def json(self):
-        return to_json(self, self.__class__)
+        return to_json(self, Sensor)
 
 Tool.sensors = relationship("Sensor", uselist=True)
