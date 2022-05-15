@@ -1,7 +1,7 @@
 from .. import Base
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from .sequences import tool_table_sequence
-from web.serializer import to_json
+from .serializer import to_json
 
 
 class Tool(Base):

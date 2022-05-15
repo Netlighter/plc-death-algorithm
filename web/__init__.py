@@ -1,1 +1,1 @@
-from .serializer import to_json
+from .database.tables.serializer import to_json

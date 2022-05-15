@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 from .accident_type import Accident_type
 from .sequences import accident_table_sequence
-from web.serializer import to_json
+from .serializer import to_json
 
 
 class Accident(Base):

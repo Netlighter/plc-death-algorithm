@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, String, Dat
 from sqlalchemy.orm import relationship
 from .sensor import Sensor
 from .sequences import sensor_value_table_sequence
-from web.serializer import to_json
+from .serializer import to_json
 
 
 class Sensor_value(Base):
