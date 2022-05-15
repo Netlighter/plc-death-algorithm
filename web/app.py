@@ -1,7 +1,7 @@
 import json
 from flask import Flask, jsonify, request
-from web.database import session, db_url
-from web.database.tables import Sensor, Tool, Sensor_value
+from .database import session, db_url
+from .database.tables import Sensor, Tool, Sensor_value
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
