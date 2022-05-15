@@ -11,7 +11,7 @@ def tick(self):
     write(self.client, f'[SEND SQL] [SENSOR] {self.get_sensor_info("A1").name}:20')
     time.sleep(1)
 
-temperature_sensor = Sensor(SensorType.TEMPERATURE, "Датчик температуры","ANALOG", lambda t: t/1000)
+temperature_sensor = Sensor(SensorType.TEMPERATURE, "OMRON","ANALOG", lambda t: t/1000)
 humidity_sensor = Sensor(SensorType.ROTATION_SPEED,"Датчик влажности", "ANALOG", lambda t: t/1000+15)
 plc.add_sensor("A1", temperature_sensor)
 plc.add_sensor("A2", humidity_sensor)

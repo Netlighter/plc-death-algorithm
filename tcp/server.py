@@ -43,9 +43,11 @@ def connect_db():
 def add_sensor_value(sensor, value):
     with db.cursor() as cursor:
         print(f"[DATABASE] Inserting '{sensor}' value of {value}")
-        cursor.execute(f"SELECT sensor_id FROM SENSOR WHERE name = '{sensor}'")
-        sensor_id = cursor.fetch_one()[0]
-        cursor.execute(f"INSERT INTO sensor_values VALUES ({sensor_id}, {datetime.now().strftime('%Y-%m-%d %H-%M-%S')}, {value})")
+        cursor.execute(f"SELECT sensor_id FROM \"SENSOR\" WHERE sensor_name = '{sensor}'")
+        sensor_id = cursor.fetchone()[0]
+        print(f"INSERT INTO \"SENSOR_VALUE\" VALUES ({sensor_id}, now(), {value});")
+        cursor.execute(f"INSERT INTO \"SENSOR_VALUE\" VALUES ({sensor_id}, now(), {value})")
+        db.commit()
 
 def process_message(conn, msg: str):
     if msg.startswith("[SEND SQL]"):
@@ -53,7 +55,7 @@ def process_message(conn, msg: str):
         process_sql_query(msg)
         
 
-def process_sql_query():
+def process_sql_query(msg):
     if msg.startswith("[SENSOR]"):
         msg = msg[9:].split(":")
         add_sensor_value(msg[0], msg[1])
