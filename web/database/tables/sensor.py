@@ -18,7 +18,7 @@ class Sensor(Base):
 
     tool_id = Column(Integer, ForeignKey(Tool.tool_id))
 
-    def json(self):
+    def json(self): 
         return to_json(self, Sensor)
 
-Tool.sensors = relationship("Sensor", uselist=True)
+Tool.sensors = relationship("Sensor", uselist=True, primaryjoin=Sensor.tool_id==Tool.tool_id)

@@ -1,8 +1,11 @@
 import json
 from flask import Flask, jsonify, request
+
+from web.database.tables import tool
 from .database import session, db_url
 from .database.tables import Sensor, Tool, Sensor_value
 from datetime import datetime, timedelta
+from sqlalchemy import func
 
 app = Flask(__name__)
 
@@ -11,6 +14,36 @@ app = Flask(__name__)
 def get_sensor_info(sensor_id):
     sensor=session.query(Sensor).get(sensor_id)
     return sensor.json()
+
+@app.route('/node/tools', methods=['GET'])
+def get_tools_by_node():
+    node = request.args.get("name")
+    if node:
+        node = node.lower()
+    available_nodes = [node_name[0].lower() for node_name in session.query(Tool.node).distinct()]
+    if node not in available_nodes:
+        return f"Node with name '{node}' does not exist. Try {available_nodes}", 400
+    tools = list(session.query(Tool).filter(func.lower(Tool.node) == node))
+    return Tool.json(tools)
+    
+@app.route('/node/sensors', methods=['GET'])
+def get_sensors_by_node():
+    node = request.args.get("name")
+    if node:
+        node = node.lower()
+    available_nodes = [node_name[0].lower() for node_name in session.query(Tool.node).distinct()]
+    if node not in available_nodes:
+        return f"Node with name '{node}' does not exist. Try {available_nodes}", 400
+    sensors = session.query(Sensor, Tool).filter(Sensor.tool_id == Tool.tool_id).filter(func.lower(Tool.node) == node)
+    result = {}
+    for sensor in sensors:
+        result[sensor[0].sensor_name] = {
+            "sensor_id": sensor[0].sensor_id,
+            "tool_id": sensor[1].tool_id,
+            "tool_name": sensor[1].tool_name,
+            "sensor_type": sensor[0].sensor_type
+        }
+    return json.dumps(result, ensure_ascii=False)
 
 @app.route("/sensors", methods=["GET"])
 def get_sensors():

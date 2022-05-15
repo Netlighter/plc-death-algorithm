@@ -18,6 +18,7 @@ class Tool(Base):
     tool_accident = Column(Boolean, nullable=False)
 
     node = Column(String)
+    
 
     def json(self):
         return to_json(self, Tool)
