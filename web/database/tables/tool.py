@@ -1,3 +1,4 @@
+
 from .. import Base
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from .sequences import tool_table_sequence
@@ -15,6 +16,8 @@ class Tool(Base):
     tool_state = Column(String, nullable=False)
 
     tool_accident = Column(Boolean, nullable=False)
+
+    node = Column(String)
 
     def json(self):
         return to_json(self, Tool)
