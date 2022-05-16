@@ -84,10 +84,14 @@ def get_sensors_value_for_tool(tool_id):
 @cross_origin()
 def get_sensor_value_from_specific_time_range(sensor_id):
     time_range = request.args.get("time")
+    sensor_values = session.query(Sensor_value).filter(Sensor_value.sensor_id == sensor_id).order_by(Sensor_value.sensor_value_date.desc())
     if not time_range:
-        time_range = 1
-    end_time = datetime.now()
-    begin_time = datetime.now() - timedelta(seconds=int(time_range))
-    values = session.query(Sensor_value).filter(Sensor_value.sensor_value_date.between(begin_time,end_time))
-    return Sensor_value.json(list(values))
+        sensor_values = sensor_values.all()
+        if not sensor_values:
+            sensor_values = []
+    else:
+        end_time = datetime.now()
+        begin_time = datetime.now() - timedelta(seconds=int(time_range))
+        sensor_values = sensor_values.filter(Sensor_value.sensor_value_date.between(begin_time,end_time))
+    return Sensor_value.json(list(sensor_values))
     
