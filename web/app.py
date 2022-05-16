@@ -1,20 +1,23 @@
 import json
 from flask import Flask, jsonify, request
-
+from flask_cors import CORS, cross_origin
 from .database import session
 from .database.tables import Sensor, Tool, Sensor_value
 from datetime import datetime, timedelta
 from sqlalchemy import func
 
 app = Flask(__name__)
-
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/sensors/<int:sensor_id>/info', methods=['GET'])
+@cross_origin()
 def get_sensor_info(sensor_id):
     sensor=session.query(Sensor).get(sensor_id)
     return sensor.json()
 
 @app.route('/node/tools', methods=['GET'])
+@cross_origin()
 def get_tools_by_node():
     node = request.args.get("name")
     if node:
@@ -26,6 +29,7 @@ def get_tools_by_node():
     return Tool.json(tools)
     
 @app.route('/node/sensors', methods=['GET'])
+@cross_origin()
 def get_sensors_by_node():
     node = request.args.get("name")
     if node:
@@ -45,16 +49,19 @@ def get_sensors_by_node():
     return json.dumps(result, ensure_ascii=False)
 
 @app.route("/sensors", methods=["GET"])
+@cross_origin()
 def get_sensors():
     sensors = session.query(Sensor).all()
     return Sensor.json(sensors)
 
 @app.route("/tools", methods=["GET"])
+@cross_origin()
 def get_tools():
     tools = session.query(Tool).all()
     return Tool.json(tools)
 
 @app.route('/tools/<int:tool_id>/sensors', methods=['GET'])
+@cross_origin()
 def get_sensors_value_for_tool(tool_id):
     tool_sensors = session.query(Tool).get(tool_id).sensors
     tool_sensors_x_values = {}
@@ -74,6 +81,7 @@ def get_sensors_value_for_tool(tool_id):
 
 
 @app.route('/sensors/<int:sensor_id>', methods=['GET'])
+@cross_origin()
 def get_sensor_value_from_specific_time_range(sensor_id):
     time_range = request.args.get("time")
     if not time_range:
