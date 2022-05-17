@@ -53,7 +53,9 @@ def process_message(conn, msg: str):
     if msg.startswith("[SEND SQL]"):
         msg = msg[11:]
         process_sql_query(msg)
-    elif msg.startswith("[]")
+    elif msg.startswith("[CONTROL]"):
+        for connection in CONNECTIONS:
+            connection.send(msg)
         
 
 def process_sql_query(msg):
@@ -82,6 +84,6 @@ def wait_connection(sock):
         Thread(target = connection_thread, args=(conn,)).start()
 
 if __name__ == "__main__":
-    socket = start_server(7777, 3)
+    sock = start_server(7777, 3)
     connect_db()
-    wait_connection(socket)
+    wait_connection(sock)

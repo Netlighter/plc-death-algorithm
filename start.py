@@ -9,6 +9,8 @@ centrifuge = Centriguge()
 crusher = Crusher()
 tank = Tank()
 
+plc = PLC()
+
 def data_send(self):
     while True:
         for value in self.send_sensors_values():
@@ -16,11 +18,22 @@ def data_send(self):
             time.sleep(0.7)
         time.sleep(5)
 
-plc = PLC()
-def init(self):
-    self.client = tcp.start_client()
-    Thread(target=data_send, args=(self,)).start()
+def message_handler(self):
+     while True:
+        try:
+            msg = self.client.recv(1024).decode('utf-8')
+            if msg:
+                if msg.start_with("[CONTROL]"):
+                    msg = msg[10:].split(":")
+                    self.write_to_analog(msg[0], int(msg[1]))
+        except Exception as e:
+            print(e)
+            self.client.close()
+            break
 
+def init(self):
+    self.client = tcp.start_client(message_handler)
+    #Thread(target=data_send, args=(self,)).start()
 
 def tick(self):
     if self.get("AI1") < 10:
@@ -62,7 +75,7 @@ plc.set_tick_func(tick)
 plc.start()
 
 
-# while True:
-#     print(crusher.oil_level)
-#     time.sleep(0.2)
+while True:
+    print(crusher.oil_level)
+    time.sleep(0.2)
 
