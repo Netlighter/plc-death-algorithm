@@ -70,10 +70,12 @@ def get_sensors_value_for_tool(tool_id):
         Sensor_value.sensor_id==item.sensor_id).order_by(Sensor_value.sensor_value_date.desc()).first()
         tool_sensors_x_values[item]= value
     tool_sensors_values = {}
+    print(tool_sensors_x_values)
     for tool in tool_sensors:
         for value in tool_sensors_x_values:
             if value.sensor_id == tool.sensor_id:
-                tool_sensors_values[tool.sensor_name] = {
+                tool_sensors_values["sensor"] = {
+                "sensor_name": tool.sensor_name,
                 "sensor_id":tool.sensor_id,
                 "updated":tool_sensors_x_values[value].sensor_value_date,
                 "value": tool_sensors_x_values[value].value}
