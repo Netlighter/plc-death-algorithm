@@ -79,6 +79,7 @@ def get_tools_values():
             tools[-1]["sensors"].append({
                 "sensor_id": sensor.sensor_id,
                 "sensor_name": sensor.sensor_name,
+                "sensor_type": sensor.sensor_type,
                 "updated": str(sensor_values.sensor_value_date),
                 "value": sensor_values.value
             })
