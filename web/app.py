@@ -60,6 +60,31 @@ def get_tools():
     tools = session.query(Tool).all()
     return Tool.json(tools)
 
+@app.route("/tool_values", methods=["GET"])
+@cross_origin()
+def get_tools_values():
+    tools = []
+    for tool in session.query(Tool).all():
+        tools.append({
+            "tool_id": tool.tool_id,
+            "tool_name": tool.tool_name,
+            "tool_state": tool.tool_state,
+            "tool_accident": tool.tool_accident,
+            "node": tool.node
+        })
+        tool_sensors = session.query(Tool).get(tool.tool_id).sensors
+        tools[-1]["sensors"] = []
+        for sensor in tool_sensors:
+            sensor_values = session.query(Sensor_value).filter(Sensor_value.sensor_id == sensor.sensor_id).order_by(Sensor_value.sensor_value_date.desc()).first()
+            tools[-1]["sensors"].append({
+                "sensor_id": sensor.sensor_id,
+                "sensor_name": sensor.sensor_name,
+                "updated": str(sensor_values.sensor_value_date),
+                "value": sensor_values.value
+            })
+
+    return json.dumps(tools, ensure_ascii=False)
+
 @app.route('/tools/<int:tool_id>/sensors', methods=['GET'])
 @cross_origin()
 def get_sensors_value_for_tool(tool_id):
