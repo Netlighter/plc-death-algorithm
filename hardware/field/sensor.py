@@ -6,6 +6,7 @@ class SensorType(Enum):
     LEVEL = 2
     ROTATION_SPEED = 3
     HUMIDITY = 4
+    OIL_LEVEL = 5
 
 
 class Sensor():

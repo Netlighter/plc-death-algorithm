@@ -1,5 +1,5 @@
-from hardware.field.sensor import Sensor
-
+from .sensor import Sensor
+from threading import Thread
 
 class PLC:
     def __init__(self):
@@ -8,12 +8,22 @@ class PLC:
         self.outputs = {}
         self.init_prg = None
         self.tick_prg = None
+        self.data_send_prg = None
 
     def add_sensor(self, port, sensor):
         self.inputs[port] = sensor
 
     def add_executor(self, port, executor):
         self.outputs[port] = executor
+
+    def send_sensor_value(self, port):
+        print(self.get(port))
+        return f'[SEND SQL] [SENSOR] {self.get_sensor_info(port).name}:{self.get(port)}'
+    
+    def send_sensors_values(self):
+        for port in self.inputs:
+            if isinstance(self.inputs[port], Sensor):
+                yield self.send_sensor_value(port)
 
     def get_sensor_info(self, port) -> Sensor:
         if not self.inputs.get(port):
@@ -24,6 +34,12 @@ class PLC:
         if not self.inputs.get(port):
             raise Exception(f'[CONTROLLER ERROR] Port {port} is not assigned.')
         return self.inputs[port].evaluate(self.tick)
+
+
+    def write_to_analog(self, port, value):
+        if not self.outputs.get(port):
+            raise Exception(f'[CONTROLLER ERROR] Port {port} is not assigned.')
+        return self.outputs[port].work(value)
 
     def set_init_func(self, func):
         self.init_prg = func
@@ -36,6 +52,8 @@ class PLC:
             self.init_prg(self)
         if not self.tick_prg:
             raise Exception('[CONTROLLER ERROR] Update function is not set.')
-        while True:
-            self.tick_prg(self)
-            self.tick+=1
+        def loop():
+            while True:
+                self.tick_prg(self)
+                self.tick+=1
+        Thread(target=loop).start()
