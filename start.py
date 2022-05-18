@@ -4,6 +4,7 @@ from hardware.field.nodes import *
 import time
 import tcp
 from threading import Thread
+import os
 
 centrifuge = Centriguge()
 crusher = Crusher()
@@ -23,7 +24,7 @@ def message_handler(self):
         try:
             msg = self.client.recv(1024).decode('utf-8')
             if msg:
-                if msg.start_with("[CONTROL]"):
+                if msg.startswith("[CONTROL]"):
                     msg = msg[10:].split(":")
                     self.write_to_analog(msg[0], int(msg[1]))
         except Exception as e:
@@ -32,12 +33,18 @@ def message_handler(self):
             break
 
 def init(self):
-    self.client = tcp.start_client(message_handler)
-    #Thread(target=data_send, args=(self,)).start()
+    self.client, recv_thread = tcp.start_client(message_handler, args = (self,))
+    recv_thread.start()
+    Thread(target=data_send, args=(self,)).start()
 
 def tick(self):
     if self.get("AI1") < 10:
         self.write_to_analog("AO1", 20)
+    self.write_to_analog("AO2",3)
+
+
+
+
     centrifuge.tick()
     crusher.tick()
     tank.tick()
@@ -69,6 +76,12 @@ plc.add_sensor("AI5", tank_temperature)
 plc.add_sensor("AI6", tank_pressure)
 
 plc.add_executor("AO1", oil_injector)
+plc.add_executor("AO2", centrifuge_heater)
+plc.add_executor("AO3", crusher_drive)
+plc.add_executor("AO4", centrifuge_drive)
+plc.add_executor("AO5", tank_drive)
+plc.add_executor("AO6", tank_heater)
+plc.add_executor("AO7", tank_pump)
 
 plc.set_init_func(init)
 plc.set_tick_func(tick)
@@ -76,6 +89,19 @@ plc.start()
 
 
 while True:
-    print(crusher.oil_level)
+    os.system("cls")
+    print("ДРОБИЛКА")
+    print(f"-- Уровень масла: {crusher.oil_level}")
+    print(f"-- Включен: {crusher.enabled}")
+    print("ЦЕНТРИФУГА")
+    print(f"-- Температура: {centrifuge.temperature}")
+    print(f"-- Скорость вращения: {centrifuge.rotation_speed}")
+    print(f"-- Включена: {centrifuge.enabled}")
+    print("СИРОПОВАРКА")
+    print(f"-- Температура: {tank.temperature}")
+    print(f"-- Скорость вращения лопастей: {tank.rotation_speed}")
+    print(f"-- Уровень жидкости: {tank.liquid_level}")
+    print(f"-- Включена: {tank.enabled}")
     time.sleep(0.2)
+    
 

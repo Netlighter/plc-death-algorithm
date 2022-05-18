@@ -55,7 +55,8 @@ def process_message(conn, msg: str):
         process_sql_query(msg)
     elif msg.startswith("[CONTROL]"):
         for connection in CONNECTIONS:
-            connection.send(msg)
+            print(msg.encode())
+            connection.send(msg.encode("utf-8"))
         
 
 def process_sql_query(msg):

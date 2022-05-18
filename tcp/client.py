@@ -15,9 +15,8 @@ def receive(client):
 def write(client, message):
     client.send(message.encode('utf-8'))
 
-def start_client(receive_handler):
+def start_client(receive_handler, args = ()):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(('127.0.0.1', 7777))
-    receive_thread = threading.Thread(target=receive_handler)
-    receive_thread.start()
-    return client
+    receive_thread = threading.Thread(target=receive_handler, args=args)
+    return (client, receive_thread)
