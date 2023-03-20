@@ -1,22 +1,14 @@
 import socket
 import threading
 
-def receive(client):
-    while True:
-        try:
-            message = client.recv(1024).decode('utf-8')
-            if message:
-                print(message)
-        except Exception as e:
-            print(e)
-            client.close()
-            break
+
 
 def write(client, message):
-    client.send(message.encode('utf-8'))
+    client.sendall(message.encode('utf-8'))
 
-def start_client(receive_handler, args = ()):
+
+def start_client(receive_handler, args=()):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(('127.0.0.1', 7777))
+    client.connect(('127.0.0.1', 9999))
     receive_thread = threading.Thread(target=receive_handler, args=args)
-    return (client, receive_thread)
+    return client, receive_thread

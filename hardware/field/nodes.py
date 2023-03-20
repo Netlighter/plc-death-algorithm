@@ -1,4 +1,18 @@
-from sqlalchemy import true
+from random import randint
+
+
+class AASBunker:
+    def __init__(self, id, capacity):
+        self.id = id
+        self.capacity = capacity
+        self.level = capacity
+        self.time = 0
+
+    def tick(self):
+        self.time += 1
+        if self.time % randint(5,10) == 0:
+            self.level -= 5
+            self.level = max(0, self.level)
 
 
 class Centriguge():
@@ -37,7 +51,6 @@ class Crusher():
     def tick(self):
         self.oil_level -= 0.5
         self.oil_level = max(0, self.oil_level)
-
 
 
 class Tank():
